@@ -1,22 +1,25 @@
-import { getTrafficSnapshot } from "lib/traffic.js";
+import { getTomTomKey, fetchFlow } from "lib/tomtom.js";
 export const access = "public";
-export const methods = ["GET"];
+export const methods = ["GET", "POST"];
 export default async function(req, res) {
-  const rows = getTrafficSnapshot();
-  const q = String((req.query && req.query.q) || "").toLowerCase();
-  const severity = String((req.query && req.query.severity) || "all");
-  const filtered = rows.filter(function(s) {
-    const queryMatch = !q || s.segment_id.toLowerCase().includes(q) || s.road_class.toLowerCase().includes(q);
-    const severityMatch = severity === "all" || s.severity === severity || (severity === "high" && s.congestion_index >= 0.82);
-    return queryMatch && severityMatch;
-  });
-  res.json({ count: filtered.length, timestamp: new Date().toISOString(), mode: "synthetic_demo",
-    segments: filtered.slice(0, 436).map(function(s) {
-      return { segment_id:s.segment_id, source_node:s.source_node, target_node:s.target_node, road_class:s.road_class,
-        lanes:s.lanes, capacity:s.capacity, free_flow_speed:s.free_flow_speed, length_km:s.length_km,
-        structural_bottleneck:s.structural_bottleneck, importance:s.importance, coordinates:s.coordinates,
-        speed:s.speed, flow:s.flow, occupancy:s.occupancy, travel_time:s.travel_time, delay:s.delay,
-        queue_length:s.queue_length, congestion_index:s.congestion_index, sensor_quality:s.sensor_quality,
-        anomaly:s.anomaly, severity:s.severity, timestamp:s.timestamp };
-    }) });
+  const body = req.body || {}, q = req.query || {};
+  const lat = Number(body.lat !== undefined ? body.lat : q.lat !== undefined ? q.lat : 17.3850);
+  const lon = Number(body.lon !== undefined ? body.lon : q.lon !== undefined ? q.lon : 78.4867);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+    return res.status(400).json({ available: false, error: "Valid latitude and longitude are required." });
+  }
+  const key = await getTomTomKey();
+  if (!key) return res.json({ available: false, configured: false, source: "TomTom Traffic API",
+    message: "TomTom is not configured. Add TOMTOM_API_KEY in the project's secure Setup page to enable live flow data." });
+  try {
+    const result = await fetchFlow(key, lat, lon);
+    if (!result.ok) return res.status(result.status || 502).json({ available: false, configured: true, source: "TomTom Traffic API", message: result.message });
+    const flow = result.data;
+    res.json({ available: true, configured: true, source: "TomTom Traffic API", location: { lat: lat, lon: lon },
+      current_speed_kmh: flow.currentSpeed, free_flow_speed_kmh: flow.freeFlowSpeed,
+      current_travel_time_sec: flow.currentTravelTime, free_flow_travel_time_sec: flow.freeFlowTravelTime,
+      confidence: flow.confidence, road_closure: flow.roadClosure, fetched_at: new Date().toISOString() });
+  } catch (error) {
+    res.status(502).json({ available: false, configured: true, source: "TomTom Traffic API", message: "Live traffic request failed. Verify the API key and TomTom subscription." });
+  }
 }
