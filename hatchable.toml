@@ -1,0 +1,4 @@
+[[secret]]
+name = "TOMTOM_API_KEY"
+required = false
+description = "Optional TomTom Traffic API key for live road speeds, delays and traffic-flow map tiles. Enter it in the project Setup page; never put it in frontend code."
