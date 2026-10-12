@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#FFF9F5">
+<meta name="description" content="Smart Routes Management by VYNEX — traffic intelligence, routes, forecasting and what-if simulation.">
+<title>Smart Routes Management · VYNEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<div id="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><div class="brand-mark"><span class="brand-road"></span><span class="brand-dot"></span></div><div class="brand-copy"><strong>smart routes</strong><span>MANAGEMENT · VYNEX</span></div><button class="icon-button mobile-close" id="closeNav" aria-label="Close menu">×</button></div>
+<div class="workspace-label">WORKSPACE</div>
+<nav class="nav-list" id="navigation">
+<button class="nav-item active" data-page="dashboard"><span class="nav-icon">◫</span>Dashboard</button>
+<button class="nav-item" data-page="routes"><span class="nav-icon">⌁</span>Route intelligence</button>
+<button class="nav-item" data-page="traffic"><span class="nav-icon">≋</span>Traffic intelligence <span class="nav-count" id="navAlerts">—</span></button>
+<button class="nav-item" data-page="forecast"><span class="nav-icon">⌁</span>Forecast</button>
+<button class="nav-item" data-page="simulation"><span class="nav-icon">◇</span>What-if simulation</button>
+<button class="nav-item" data-page="live"><span class="nav-icon">◉</span>Live traffic</button>
+<button class="nav-item" data-page="network"><span class="nav-icon">⠿</span>Network & data</button>
+<button class="nav-item" data-page="insights"><span class="nav-icon">✳</span>Insights</button>
+<button class="nav-item" data-page="status"><span class="nav-icon">▣</span>System status</button>
+</nav>
+<div class="sidebar-bottom"><div class="mode-card"><div class="mode-top"><span class="status-pulse"></span><span>DEMO ENVIRONMENT</span></div><strong>Synthetic network</strong><p>Use the demo to explore the workflow. Organizer files are not connected.</p><button id="openData" class="text-action">View data status <span>↗</span></button></div>
+<div class="user-row"><div class="avatar">VX</div><div><strong>VYNEX team</strong><span>Smart mobility lab</span></div><span class="user-menu">•••</span></div></div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<main class="main-shell">
+<header class="topbar"><button class="icon-button mobile-menu" id="openNav" aria-label="Open menu">☰</button><div class="breadcrumb"><span>Workspace</span><b>/</b><strong id="crumb">Dashboard</strong></div>
+<div class="top-actions"><div class="clock"><span class="live-dot"></span><span id="nowLabel">Updating local time</span></div><button class="icon-button notification-button" id="refreshAll" aria-label="Refresh data" title="Refresh data">↻</button><div class="top-avatar">VX</div></div></header>
+<div id="toast" class="toast" role="status"></div>
+<section class="page-content" id="pageContent"><div class="loading-panel"><div class="loader"></div><h2>Preparing your traffic workspace</h2><p>Connecting dashboard services…</p></div></section>
+<footer class="footer"><span>SMART ROUTES MANAGEMENT <b>·</b> VYNEX</span><span><i></i> Demo environment · Not for real-world dispatch decisions</span></footer>
+</main></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="/app.js"></script>
+</body></html>
